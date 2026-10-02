@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Головна</title>
+</head>
+<body>
+
+<h1>Ласкаво просимо!</h1>
+
+<h2>Покерні столи</h2>
+
+{% for table in poker_tables %}
+    <div>
+        <h3>{{ table.name }}</h3>
+
+        <p>
+            Малий блайнд: {{ table.small_blind }}
+        </p>
+
+        <p>
+            Великий блайнд: {{ table.big_blind }}
+        </p>
+
+        <p>
+            Місць: {{ table.max_seats }}
+        </p>
+
+        <p>
+            Пот: {{ table.pot }}
+        </p>
+
+        {% if table.is_game_running %}
+            <p>Гра вже триває</p>
+        {% else %}
+            <p>Гра очікує на гравців</p>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>Поки немає покерних столів.</p>
+{% endfor %}
+
+
+<h2>Слот-машини</h2>
+
+{% for machine in slot_machines %}
+    <div>
+        <h3>{{ machine.name }}</h3>
+
+        <p>Мінімальна ставка: {{ machine.min_bet }}</p>
+        <p>Максимальна ставка: {{ machine.max_bet }}</p>
+        <p>RTP: {{ machine.rtp }}%</p>
+    </div>
+{% empty %}
+    <p>Поки немає доступних слот-машин.</p>
+{% endfor %}
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Слот-машина</title>
+</head>
+<body>
+
+    <h1>{{ machine.name }}</h1>
+
+    <p>Ваш баланс: {{ profile.balance }}</p>
+
+    {% if last_spin %}
+        <h2>Останній результат:</h2>
+        <p>{{ last_spin.combination }}</p>
+        <p>Ставка: {{ last_spin.bet_amount }}</p>
+        <p>Виграш: {{ last_spin.win_amount }}</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Сума ставки:</label>
+        <input type="number"
+               name="bet_amount"
+               step="0.01"
+               min="{{ machine.min_bet }}"
+               max="{{ machine.max_bet }}"
+               required>
+
+        <button type="submit">Крутити 🎰</button>
+    </form>
+
+</body>
+</html>

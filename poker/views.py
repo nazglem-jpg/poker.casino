@@ -5,6 +5,21 @@ from django.contrib.auth.decorators import login_required
 from decimal import Decimal
 from django.db import transaction
 from .models import PlayerProfile, SlotMachine, SlotSpin, GameTransaction
+from django.shortcuts import render
+
+from .models import PokerTable, SlotMachine
+
+
+def home(request):
+    poker_tables = PokerTable.objects.all()
+    slot_machines = SlotMachine.objects.filter(is_active=True)
+
+    context = {
+        "poker_tables": poker_tables,
+        "slot_machines": slot_machines,
+    }
+
+    return render(request, "home.html", context)
 
 @login_required
 def play_slots(request, machine_id):
@@ -81,3 +96,4 @@ def play_slots(request, machine_id):
         'last_spin': last_spin
     }
     return render(request, 'casino/slots.html', context)
+    return redirect('slots_page', machine_i=machine.id)
