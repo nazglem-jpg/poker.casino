@@ -2,34 +2,178 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Слот-машина</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino | Головна</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #151329;
+            color: white;
+        }
+
+        header {
+            background: #241e46;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        header h1 {
+            color: #b69aff;
+            margin: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 10px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: #201a3c;
+        }
+
+        .hero h2 {
+            font-size: 38px;
+            color: #d0b8ff;
+        }
+
+        button {
+            background: #8055e8;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #633bc4;
+        }
+
+        .games {
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .game-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .game {
+            background: #292448;
+            padding: 25px;
+            border-radius: 15px;
+            width: 230px;
+        }
+
+        .game h3 {
+            color: #c5adff;
+        }
+
+        .emoji {
+            font-size: 50px;
+        }
+
+        .balance {
+            color: #75f0ad;
+            font-weight: bold;
+        }
+
+        footer {
+            background: #241e46;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>{{ machine.name }}</h1>
+<header>
+    <h1>🎰 MY CASINO</h1>
 
-    <p>Ваш баланс: {{ profile.balance }}</p>
+    <nav>
+        <a href="/">Головна</a>
+        <a href="#games">Ігри</a>
 
-    {% if last_spin %}
-        <h2>Останній результат:</h2>
-        <p>{{ last_spin.combination }}</p>
-        <p>Ставка: {{ last_spin.bet_amount }}</p>
-        <p>Виграш: {{ last_spin.win_amount }}</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Вийти</a>
+        {% else %}
+            <a href="{% url 'login' %}">Увійти</a>
+            <a href="{% url 'register' %}">Реєстрація</a>
+        {% endif %}
+    </nav>
+</header>
+
+<section class="hero">
+    <h2>Ласкаво просимо!</h2>
+    <p>Твій ігровий портал уже чекає на тебе.</p>
+
+    {% if user.is_authenticated %}
+        <p>Привіт, {{ user.username }}!</p>
+    {% else %}
+        <p>Увійди в акаунт, щоб переглянути доступні ігри.</p>
     {% endif %}
 
-    <form method="POST">
-        {% csrf_token %}
+    <a href="#games">
+        <button>Переглянути ігри</button>
+    </a>
+</section>
 
-        <label>Сума ставки:</label>
-        <input type="number"
-               name="bet_amount"
-               step="0.01"
-               min="{{ machine.min_bet }}"
-               max="{{ machine.max_bet }}"
-               required>
+<section class="games" id="games">
+    <h2>🎮 Наші ігри</h2>
 
-        <button type="submit">Крутити 🎰</button>
-    </form>
+    <div class="game-list">
+
+        <div class="game">
+            <div class="emoji">🎰</div>
+            <h3>Слот-машина</h3>
+            <p>Крути барабани та дивись результат.</p>
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'slots_page' machine_id=1 %}">
+                    <button>Відкрити</button>
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}">
+                    <button>Увійти</button>
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="game">
+            <div class="emoji">🃏</div>
+            <h3>Карткова гра</h3>
+            <p>Розділ для майбутньої карткової гри.</p>
+            <button disabled>Незабаром</button>
+        </div>
+
+        <div class="game">
+            <div class="emoji">🎯</div>
+            <h3>Інші ігри</h3>
+            <p>Нові розваги можна додати пізніше.</p>
+            <button disabled>Незабаром</button>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <p>MY CASINO © 2026</p>
+    <p>Демонстраційний навчальний проєкт.</p>
+</footer>
 
 </body>
 </html>

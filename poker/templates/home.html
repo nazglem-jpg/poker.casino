@@ -2,58 +2,116 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Головна</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Слот-машина</title>
+
+    <style>
+        body {
+            background: #17152b;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .casino {
+            background: #292448;
+            max-width: 450px;
+            margin: 30px auto;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px #8055ff;
+        }
+
+        .reels {
+            background: #ffffff;
+            color: #17152b;
+            font-size: 35px;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        input {
+            padding: 12px;
+            width: 80%;
+            margin: 10px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 10px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #6d3ee8;
+        }
+
+        .message {
+            margin: 10px;
+            color: #ffd166;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Ласкаво просимо!</h1>
+    <div class="casino">
+        <h1>🎰 Слот-машина</h1>
 
-<h2>Покерні столи</h2>
+        <h2>{{ machine.name }}</h2>
 
-{% for table in poker_tables %}
-    <div>
-        <h3>{{ table.name }}</h3>
+        <p>💰 Твій баланс: {{ profile.balance }}</p>
 
-        <p>
-            Малий блайнд: {{ table.small_blind }}
-        </p>
-
-        <p>
-            Великий блайнд: {{ table.big_blind }}
-        </p>
-
-        <p>
-            Місць: {{ table.max_seats }}
-        </p>
-
-        <p>
-            Пот: {{ table.pot }}
-        </p>
-
-        {% if table.is_game_running %}
-            <p>Гра вже триває</p>
-        {% else %}
-            <p>Гра очікує на гравців</p>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="message">{{ message }}</p>
+            {% endfor %}
         {% endif %}
+
+        <div class="reels">
+            {% if last_spin %}
+                {{ last_spin.combination }}
+            {% else %}
+                🍒 | 🍋 | 🔔
+            {% endif %}
+        </div>
+
+        {% if last_spin %}
+            <p>Ставка: {{ last_spin.bet_amount }}</p>
+            <p>Виграш: {{ last_spin.win_amount }}</p>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <p>Введи суму ставки:</p>
+
+            <input
+                type="number"
+                name="bet_amount"
+                min="{{ machine.min_bet }}"
+                max="{{ machine.max_bet }}"
+                step="0.01"
+                placeholder="Сума ставки"
+                required
+            >
+
+            <p>
+                Мінімум: {{ machine.min_bet }} |
+                Максимум: {{ machine.max_bet }}
+            </p>
+
+            <button type="submit">🎰 Крутити!</button>
+        </form>
     </div>
-{% empty %}
-    <p>Поки немає покерних столів.</p>
-{% endfor %}
-
-
-<h2>Слот-машини</h2>
-
-{% for machine in slot_machines %}
-    <div>
-        <h3>{{ machine.name }}</h3>
-
-        <p>Мінімальна ставка: {{ machine.min_bet }}</p>
-        <p>Максимальна ставка: {{ machine.max_bet }}</p>
-        <p>RTP: {{ machine.rtp }}%</p>
-    </div>
-{% empty %}
-    <p>Поки немає доступних слот-машин.</p>
-{% endfor %}
 
 </body>
 </html>
