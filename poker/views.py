@@ -6,7 +6,8 @@ from decimal import Decimal
 from django.db import transaction
 from .models import PlayerProfile, SlotMachine, SlotSpin, GameTransaction
 from django.shortcuts import render
-
+def home(request):
+    return render(request, 'casino/home.html')
 from .models import PokerTable, SlotMachine
 
 
@@ -24,8 +25,11 @@ def home(request):
 @login_required
 def play_slots(request, machine_id):
     machine = get_object_or_404(SlotMachine, id=machine_id, is_active=True)
-    profile = get_object_or_404(PlayerProfile, user=request.user)
 
+    profile, created = PlayerProfile.objects.get_or_create(
+    user=request.user,
+    defaults={'balance': 1000}
+)
     if request.method == 'POST':
         try:
             bet = Decimal(request.POST.get('bet_amount', 0))
@@ -95,5 +99,5 @@ def play_slots(request, machine_id):
         'profile': profile,
         'last_spin': last_spin
     }
-    return render(request, 'casino/slots.html', context)
+    return render(request, 'slots.html', context)
     return redirect('slots_page', machine_i=machine.id)
