@@ -147,18 +147,18 @@
                     <button>Відкрити</button>
                 </a>
             {% else %}
-                <a href="{% url 'login'%}">
+                 <a href="{% url 'login'%}"></a>
                     <button>Увійти</button>
                 </a>
             {% endif %}
         </div>
 
-        <div class="game">
-            <div class="emoji">🃏</div>
-            <h3>Карткова гра</h3>
-            <p>Розділ для майбутньої карткової гри.</p>
-            <button disabled>Незабаром</button>
-        </div>
+        
+
+        <a href="{%url 'durak%'}" class="btn btn-warning">
+            🃏Грати в Дурака
+
+        </a>
 
         <div class="game">
             <div class="emoji">🎯</div>
